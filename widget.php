@@ -123,7 +123,10 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 	function get_html_content( $instance, $args, $template_vars, $css_name ){
 		$tpl = $this->custom_options[ 'template_code' ];
 
-		// TODO Process the code
+		// Process the code using Dust
+		$dust = new \Dust\Dust();
+		$template = $dust->compile( $tpl );
+		$tpl = $dust->renderTemplate( $template, $instance );
 
 		// Add the title field if there is one
 		if( $this->custom_options[ 'has_title' ] && !empty( $instance['title'] ) ) {
