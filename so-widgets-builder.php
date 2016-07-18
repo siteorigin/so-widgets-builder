@@ -138,7 +138,35 @@ class SiteOrigin_Widgets_Builder {
 	}
 
 	function diagnosis_information(){
+		$diagnosis = array();
 
+		$diagnosis[] = __( 'Widgets Bundle Installed: ', 'so-widgets-builder' ) .
+			( defined( 'SOW_BUNDLE_VERSION' ) ? __( 'Yes', 'so-widgets-builder' ) : '<strong>' . __( 'No', 'so-widgets-builder' ) . '</strong>' );
+
+		if( ! defined( 'SOW_BUNDLE_VERSION' )  ) {
+			$diagnosis[] = sprintf(
+				__( '<strong>Note:</strong> Please install the %sSiteOrigin Widgets Bundle%s.', 'so-widgets-builder' ),
+				'<a href="https://wordpress.org/plugins/so-widgets-bundle/" target="_blank">',
+				'</a>'
+			);
+		}
+		else {
+			$diagnosis[] = __( 'Widgets Bundle Version: ', 'so-widgets-builder' ) . SOW_BUNDLE_VERSION;
+			if( SOW_BUNDLE_VERSION !== 'dev' && version_compare( SOW_BUNDLE_VERSION, '1.6.3', '<' ) ) {
+				$diagnosis[] = sprintf(
+					__( '<strong>Note:</strong> Please update %sSiteOrigin Widgets Bundle%s.', 'so-widgets-builder' ),
+					'<a href="' . admin_url( 'update-core.php' ) . '">',
+					'</a>'
+				);
+			}
+		}
+
+		$diagnosis[] = __( 'PHP Version: ', 'so-widgets-builder' ) . phpversion();
+		if( version_compare( phpversion(), '5.4.0', '<' ) ) {
+			$diagnosis[] = __( '<strong>Note:</strong> PHP version 5.4.0 or above is required.', 'so-widgets-builder' );
+		}
+
+		return implode( "\n", $diagnosis );
 	}
 
 	function display_diagnosis_page(){
@@ -146,6 +174,9 @@ class SiteOrigin_Widgets_Builder {
 	}
 
 	function dust_autoloader( $class_name ){
+		// to prevent this being double loaded
+		if( class_exists( $class_name ) ) return;
+
 		if( strpos( $class_name, 'Dust\\' ) === 0 ) {
 			$class_name = ltrim( $class_name, '\\' );
 			$filename  = '';
