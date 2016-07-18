@@ -8,7 +8,7 @@ Contributors: gpriday
 
 == Description ==
 
-Build your own custom widgets using
+Build your own custom widgets using SiteOrigin Widgets Bundle.
 
 == Support ==
 
