@@ -125,13 +125,8 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 		$tpl = $this->custom_options[ 'template_code' ];
 
 		// Process the code using Dust
-		$dust = new \Dust\Dust();
-
-		// Add the filters
-		$this->add_dust_filters( $dust );
-
-		$template = $dust->compile( $tpl );
-		$tpl = $dust->renderTemplate( $template, $instance );
+		$twig = $this->get_twig( $tpl );
+		$tpl = $twig->render( 'default.tpl', $instance );
 
 		// Add the title field if there is one
 		if( $this->custom_options[ 'has_title' ] && !empty( $instance['title'] ) ) {
@@ -193,11 +188,20 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 		return $this->custom_options[ 'less_code' ];
 	}
 
-	function add_dust_filters( & $dust ) {
-		$dust->filters['panels_render'] = function ($value) {
+	function get_twig( $tpl ){
+		$loader = new Twig_Loader_Array( array(
+			'default.tpl' => $tpl,
+		) );
+		$twig = new Twig_Environment( $loader, array(
+			'autoescape' => true,
+		) );
+
+		$twig->addFilter( new Twig_SimpleFilter('panels_render', function ( $panels_data ) {
 			return function_exists( 'siteorigin_panels_render' ) ?
-				siteorigin_panels_render( 'w'.substr( md5( json_encode( $value ) ), 0, 8 ), true, $value ) :
-				__( 'This field requires Page Builder.', 'so-widgets-bundle' );
-		};
+				siteorigin_panels_render( 'w'.substr( md5( json_encode( $panels_data ) ), 0, 8 ), true, $panels_data ) :
+				__( 'Page builder is required to render this field.', 'so-widgets-builder' );
+		} ) );
+
+		return $twig;
 	}
 }

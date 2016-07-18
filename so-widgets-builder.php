@@ -44,7 +44,8 @@ class SiteOrigin_Widgets_Builder {
 			add_action( 'save_post', array( $this, 'save_post' ) );
 			add_action( 'widgets_init', array( $this, 'register_widgets' ) );
 
-			spl_autoload_register( array( $this, 'dust_autoloader' ) );
+			require_once plugin_dir_path( __FILE__ ) . 'inc/Twig/Autoloader.php';
+			Twig_Autoloader::register();
 		}
 	}
 
@@ -172,25 +173,5 @@ class SiteOrigin_Widgets_Builder {
 	function display_diagnosis_page(){
 		include plugin_dir_path( __FILE__ ) . '/tpl/diagnosis.php';
 	}
-
-	function dust_autoloader( $class_name ){
-		// to prevent this being double loaded
-		if( class_exists( $class_name ) ) return;
-
-		if( strpos( $class_name, 'Dust\\' ) === 0 ) {
-			$class_name = ltrim( $class_name, '\\' );
-			$filename  = '';
-			$namespace = '';
-			if ( $lastNsPos = strrpos( $class_name, '\\' ) ) {
-				$namespace = substr( $class_name, 0, $lastNsPos );
-				$class_name = substr( $class_name, $lastNsPos + 1 );
-				$filename  = str_replace( '\\', DIRECTORY_SEPARATOR, $namespace ) . DIRECTORY_SEPARATOR;
-			}
-			$filename .= str_replace( '_', DIRECTORY_SEPARATOR, $class_name ) . '.php';
-
-			require plugin_dir_path( __FILE__ ) . 'inc/' . $filename;
-		}
-	}
-
 }
 SiteOrigin_Widgets_Builder::single();
