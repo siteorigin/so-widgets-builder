@@ -103,6 +103,10 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 				'label' => __( 'Field Type', 'so-widgets-bundle' ),
 				'type' => 'select',
 				'default' => 'text',
+				'state_emitter' => array(
+					'callback' => 'select',
+					'args' => array( 'field_type_{$repeater}' )
+				)
 			),
 			'label' => array(
 				'label' => __( 'Field Label', 'so-widgets-bundle' ),
@@ -120,16 +124,18 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 				'description' => __( 'Machine readable name for this field. Should only consist of lowercase characters and _ characters.', 'so-widgets-bundle' ),
 				'default' => '',
 			),
-			'default' => array(
-				'label' => __( 'Default Value', 'so-widgets-bundle' ),
-				'type' => 'text',
-				'default' => '',
-			),
 		);
 	}
 
 	private function get_specific_fields(){
 		return array(
+			'default' => array(
+				'label' => __( 'Default Value', 'so-widgets-bundle' ),
+				'type' => 'text',
+				'default' => '',
+				'_for_fields' => array(),
+			),
+
 			'placeholder' => array(
 				'label' => __( 'Placeholder', 'so-widgets-bundle' ),
 				'type' => 'text',
@@ -228,23 +234,43 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 			$this->get_general_field_fields(),
 			$this->get_specific_fields()
 		);
+
+		// Add the field types to the type field
 		$type_array = array();
-		foreach( $fields as $k => $field ) {
+		foreach( $fields as $k => & $field ) {
 			$type_array[$k] = $field['label'];
-
-			if( ! empty( $field[ 'fields' ] ) ) {
-
-			}
 		}
-
 		$return['type']['options'] = $type_array;
 
+		// Add the sub fields
 		if( $depth >= 1 ) {
 			$return['sub_fields'] = array(
 				'type' => 'repeater',
 				'label' => __( 'Fields', 'so-widgets-bundle' ),
-				'fields' => $this->get_field_array( --$depth )
+				'fields' => $this->get_field_array( --$depth ),
+				'_for_fields' => array(),
 			);
+		}
+
+		// Fill in all the _for_fields values
+		foreach( $fields as $k => $field ) {
+			if( empty( $field[ 'fields' ] ) ) continue;
+			foreach( $field[ 'fields' ] as $f ) {
+				// Skip any fields that don't have _for_fields
+				if( ! isset( $return[$f]['_for_fields'] ) ) continue;
+				$return[$f]['_for_fields'][] = $k;
+			}
+		}
+
+		// Convert the _for_fields values into state handler arguments
+		foreach( $return as & $f ) {
+			if( ! isset( $f['_for_fields'] ) ) continue;
+
+			$f['state_handler'] = array(
+				'field_type_{$repeater}[' . implode( ',', $f['_for_fields'] ) . ']' => array('show'),
+				'_else[field_type_{$repeater}]' => array( 'hide' ),
+			);
+			unset( $f['_for_fields'] );
 		}
 
 		return $return;

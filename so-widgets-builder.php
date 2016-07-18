@@ -51,7 +51,7 @@ class SiteOrigin_Widgets_Builder {
 	function register_post_type() {
 		if( current_user_can( 'manage_options' ) ) {
 			register_post_type( 'so-custom-widget', array(
-				'label' => __( 'Widget Builder', 'so-widgets-bundle' ),
+				'label' => __( 'Widgets Builder', 'so-widgets-bundle' ),
 				'public' => false,
 				'publicly_queryable' => false,
 				'show_ui' => true,
@@ -130,7 +130,7 @@ class SiteOrigin_Widgets_Builder {
 		add_submenu_page(
 			'tools.php',
 			__( 'SiteOrigin Widgets Builder Diagnoses', 'so-widgets-builder' ),
-			__( 'Widget Builder', 'so-widgets-builder' ),
+			__( 'Widgets Builder', 'so-widgets-builder' ),
 			'manage_options',
 			'sow-builder-diagnosis',
 			array( $this, 'display_diagnosis_page' )
