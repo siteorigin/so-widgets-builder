@@ -12,6 +12,7 @@ License: GPL3
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 */
 
+define('SOW_BUILDER_VERSION', 'dev');
 
 class SiteOrigin_Widgets_Builder {
 
