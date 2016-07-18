@@ -202,6 +202,28 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 				__( 'Page builder is required to render this field.', 'so-widgets-builder' );
 		} ) );
 
+		$twig->addFilter( new Twig_SimpleFilter('image', function ( $id, $type = 'html', $size = 'full' ) {
+			switch( $type ) {
+				case 'html' :
+					return wp_get_attachment_image( $id, $size );
+					break;
+
+				default :
+					$src = wp_get_attachment_image_src( $id, $size );
+					if( empty( $src ) ) return '';
+					if( $type == 'src' ) {
+						return $src[0];
+					}
+					else if( $type == 'width' ) {
+						return $src[1];
+					}
+					else if( $type == 'height' ) {
+						return $src[2];
+					}
+					break;
+			}
+		} ) );
+
 		return $twig;
 	}
 }
