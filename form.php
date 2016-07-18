@@ -5,7 +5,7 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 	function __construct( ) {
 		parent::__construct(
 			'widget-builder-form',
-			__( 'SiteOrigin Widget Builder', 'siteorigin-premium' ),
+			__( 'SiteOrigin Widget Builder', 'so-widgets-builder' ),
 			array(
 				'has_preview' => false,
 			),
