@@ -221,7 +221,14 @@ class Evaluator {
                 $resolved = array_reduce($ref->filters, function ($prev, Ast\Filter $curr) {
                     if (array_key_exists($curr->key, $this->dust->filters)) {
                         $filter = $this->dust->filters[$curr->key];
-                        return $filter->apply($prev);
+
+                        if( method_exists( $filter, 'apply' ) ) {
+                            return $filter->apply( $prev );
+                        }
+                        elseif( is_callable( $filter ) ) {
+                            return call_user_func( $filter, $prev );
+                        }
+
                     } else return $prev;
                 }, $resolved);
             }
