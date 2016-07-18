@@ -137,6 +137,54 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 		return $tpl;
 	}
 
+	/**
+	 * Get less variables based on the instance and LESS content.
+	 *
+	 * @param $instance
+	 * @return array
+	 */
+	function get_less_variables( $instance ) {
+		$less = $this->custom_options[ 'less_code' ];
+
+		$return = array();
+
+		preg_match_all( '/\@(.*?) *\:.*?;/', $less, $matches );
+
+		if( !empty( $matches[0] ) ) {
+			for( $i = 0; $i < count( $matches[0] ); $i++ ) {
+				$parts = explode( '-', $matches[1][$i] );
+
+				$value = null;
+
+				foreach( $parts as $p ) {
+					if( is_null( $value ) ) {
+						if( isset( $instance[$p] ) ) {
+							$value = $instance[$p];
+						}
+						else {
+							$value = null;
+							continue;
+						}
+					}
+					else {
+						if( isset( $value[$p] ) ) {
+							$value = $value[$p];
+						}
+						else {
+							$value = null;
+							continue;
+						}
+					}
+				}
+
+				if( !is_null( $value ) && ! is_array( $value ) ) {
+					$return[ $matches[1][$i] ] = $value;
+				}
+			}
+		}
+		return $return;
+	}
+
 	function get_less_content( $instance ){
 		return $this->custom_options[ 'less_code' ];
 	}
