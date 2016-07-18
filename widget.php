@@ -126,6 +126,10 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 
 		// Process the code using Dust
 		$dust = new \Dust\Dust();
+
+		// Add the filters
+		$this->add_dust_filters( $dust );
+
 		$template = $dust->compile( $tpl );
 		$tpl = $dust->renderTemplate( $template, $instance );
 
@@ -187,5 +191,13 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 
 	function get_less_content( $instance ){
 		return $this->custom_options[ 'less_code' ];
+	}
+
+	function add_dust_filters( & $dust ) {
+		$dust->filters['panels_render'] = function ($value) {
+			return function_exists( 'siteorigin_panels_render' ) ?
+				siteorigin_panels_render( 'w'.substr( md5( json_encode( $value ) ), 0, 8 ), true, $value ) :
+				__( 'This field requires Page Builder.', 'so-widgets-bundle' );
+		};
 	}
 }
