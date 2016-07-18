@@ -27,38 +27,45 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 
 		return array(
 			'description' => array(
-				'label' => __( 'Widget Description', 'so-widgets-bundle' ),
+				'label' => __( 'Widget Description', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 			),
 
 			'has_title' => array(
-				'label' => __( 'Title Field', 'so-widgets-bundle' ),
-				'description' => __( 'Does this widget need a title field', 'so-widgets-bundle' ),
+				'label' => __( 'Title Field', 'so-widgets-builder' ),
+				'description' => __( 'Does this widget need a title field', 'so-widgets-builder' ),
 				'type' => 'checkbox',
 				'default' => true,
 			),
 
 			'fields' => array(
 				'type' => 'repeater',
-				'label' => __( 'Widget Form Fields', 'so-widgets-bundle' ),
+				'label' => __( 'Widget Form Fields', 'so-widgets-builder' ),
+				'item_name'  => __( 'Field', 'so-widgets-builder' ),
+				'item_label' => array(
+					'selector'     => ".siteorigin-widget-input[id*='fields-label']",
+					'update_event' => 'change',
+					'value_method' => 'val'
+				),
 				'fields' => $this->get_field_array( 4 ),
 			),
 
 			'scripts' => array(
 				'type' => 'repeater',
-				'label' => __( 'Javascript Scripts', 'so-widgets-bundle' ),
+				'label' => __( 'Javascript Scripts', 'so-widgets-builder' ),
+				'item_name'  => __( 'Script', 'so-widgets-builder' ),
 				'fields' => array(
 					'file' => array(
 						'type' => 'media',
-						'label' => __( 'Javascript File', 'so-widgets-bundle' ),
-						'choose' => __( 'Choose Script', 'so-widgets-bundle' ),
-						'update' => __( 'Update Script', 'so-widgets-bundle' ),
+						'label' => __( 'Javascript File', 'so-widgets-builder' ),
+						'choose' => __( 'Choose Script', 'so-widgets-builder' ),
+						'update' => __( 'Update Script', 'so-widgets-builder' ),
 						'library' => 'file',
 					),
 					'jquery' => array(
 						'type' => 'checkbox',
-						'label' => __( 'Requires jQuery', 'so-widgets-bundle' ),
+						'label' => __( 'Requires jQuery', 'so-widgets-builder' ),
 						'default' => false
 					)
 				)
@@ -66,13 +73,14 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 
 			'styles' => array(
 				'type' => 'repeater',
-				'label' => __( 'CSS Styles', 'so-widgets-bundle' ),
+				'label' => __( 'CSS Styles', 'so-widgets-builder' ),
+				'item_name'  => __( 'Style', 'so-widgets-builder' ),
 				'fields' => array(
 					'file' => array(
 						'type' => 'media',
-						'label' => __( 'CSS File', 'so-widgets-bundle' ),
-						'choose' => __( 'Choose Style', 'so-widgets-bundle' ),
-						'update' => __( 'Update Style', 'so-widgets-bundle' ),
+						'label' => __( 'CSS File', 'so-widgets-builder' ),
+						'choose' => __( 'Choose Style', 'so-widgets-builder' ),
+						'update' => __( 'Update Style', 'so-widgets-builder' ),
 						'library' => 'file',
 					),
 				)
@@ -81,13 +89,13 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 			'template_code' => array(
 				'type' => 'code',
 				'rows' => 8,
-				'label' => __( 'Template HTML Code', 'so-widgets-bundle' ),
+				'label' => __( 'Template HTML Code', 'so-widgets-builder' ),
 			),
 
 			'less_code' => array(
 				'type' => 'code',
 				'rows' => 8,
-				'label' => __( 'Template LESS Code', 'so-widgets-bundle' ),
+				'label' => __( 'Template LESS Code', 'so-widgets-builder' ),
 			),
 		);
 	}
@@ -100,7 +108,7 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 	private function get_general_field_fields(){
 		return array(
 			'type' => array(
-				'label' => __( 'Field Type', 'so-widgets-bundle' ),
+				'label' => __( 'Field Type', 'so-widgets-builder' ),
 				'type' => 'select',
 				'default' => 'text',
 				'state_emitter' => array(
@@ -109,19 +117,19 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 				)
 			),
 			'label' => array(
-				'label' => __( 'Field Label', 'so-widgets-bundle' ),
+				'label' => __( 'Field Label', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 			),
 			'description' => array(
-				'label' => __( 'Field Description', 'so-widgets-bundle' ),
+				'label' => __( 'Field Description', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 			),
 			'variable' => array(
-				'label' => __( 'Variable Name', 'so-widgets-bundle' ),
+				'label' => __( 'Variable Name', 'so-widgets-builder' ),
 				'type' => 'text',
-				'description' => __( 'Machine readable name for this field. Should only consist of lowercase characters and _ characters.', 'so-widgets-bundle' ),
+				'description' => __( 'Machine readable name for this field. Should only consist of lowercase characters and _ characters.', 'so-widgets-builder' ),
 				'default' => '',
 			),
 		);
@@ -130,14 +138,14 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 	private function get_specific_fields(){
 		return array(
 			'default' => array(
-				'label' => __( 'Default Value', 'so-widgets-bundle' ),
+				'label' => __( 'Default Value', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 				'_for_fields' => array(),
 			),
 
 			'placeholder' => array(
-				'label' => __( 'Placeholder', 'so-widgets-bundle' ),
+				'label' => __( 'Placeholder', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 				'_for_fields' => array(),
@@ -145,13 +153,13 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 
 			// Number fields
 			'min' => array(
-				'label' => __( 'Minimum Value', 'so-widgets-bundle' ),
+				'label' => __( 'Minimum Value', 'so-widgets-builder' ),
 				'type' => 'number',
 				'default' => 0,
 				'_for_fields' => array(),
 			),
 			'max' => array(
-				'label' => __( 'Maximum Value', 'so-widgets-bundle' ),
+				'label' => __( 'Maximum Value', 'so-widgets-builder' ),
 				'type' => 'number',
 				'default' => 100,
 				'_for_fields' => array(),
@@ -159,23 +167,28 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 
 			// Select fields
 			'prompt' => array(
-				'label' => __( 'Prompt', 'so-widgets-bundle' ),
-				'description' => __( 'Text that prompts a user on select values', 'so-widgets-bundle' ),
+				'label' => __( 'Prompt', 'so-widgets-builder' ),
+				'description' => __( 'Text that prompts a user on select values', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 				'_for_fields' => array(),
 			),
 			'options' => array(
-				'label' => __( 'Options', 'so-widgets-bundle' ),
-				'description' => __( 'Select options available to this field', 'so-widgets-bundle' ),
+				'label' => __( 'Options', 'so-widgets-builder' ),
+				'item_label' => array(
+					'selector'     => ".siteorigin-widget-input[id*='fields-label']",
+					'update_event' => 'change',
+					'value_method' => 'val'
+				),
+				'description' => __( 'Select options available to this field', 'so-widgets-builder' ),
 				'type' => 'repeater',
 				'fields' => array(
 					'label' => array(
-						'label' => __( 'Label', 'so-widgets-bundle' ),
+						'label' => __( 'Label', 'so-widgets-builder' ),
 						'type' => 'text',
 					),
 					'value' => array(
-						'label' => __( 'Value', 'so-widgets-bundle' ),
+						'label' => __( 'Value', 'so-widgets-builder' ),
 						'type' => 'text',
 					),
 				),
@@ -184,37 +197,37 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 
 			// Media field
 			'choose' => array(
-				'label' => __( 'Choose Label', 'so-widgets-bundle' ),
-				'description' => __( 'A label for the title of the media selector dialog.', 'so-widgets-bundle' ),
+				'label' => __( 'Choose Label', 'so-widgets-builder' ),
+				'description' => __( 'A label for the title of the media selector dialog.', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 				'_for_fields' => array(),
 			),
 			'update' => array(
-				'label' => __( 'Update Label', 'so-widgets-bundle' ),
-				'description' => __( 'A label for the confirmation button of the media selector dialog.', 'so-widgets-bundle' ),
+				'label' => __( 'Update Label', 'so-widgets-builder' ),
+				'description' => __( 'A label for the confirmation button of the media selector dialog.', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 				'_for_fields' => array(),
 			),
 			'library' => array(
-				'label' => __( 'Library', 'so-widgets-bundle' ),
-				'description' => __( 'What type of fields are allowed.', 'so-widgets-bundle' ),
+				'label' => __( 'Library', 'so-widgets-builder' ),
+				'description' => __( 'What type of fields are allowed.', 'so-widgets-builder' ),
 				'type' => 'select',
 				'default' => 'file',
 				'options' => array(
-					'file' => __( 'File', 'so-widgets-bundle' ),
-					'image' => __( 'Image	', 'so-widgets-bundle' ),
-					'audio' => __( 'Audio', 'so-widgets-bundle' ),
-					'video' => __( 'Video', 'so-widgets-bundle' ),
+					'file' => __( 'File', 'so-widgets-builder' ),
+					'image' => __( 'Image	', 'so-widgets-builder' ),
+					'audio' => __( 'Audio', 'so-widgets-builder' ),
+					'video' => __( 'Video', 'so-widgets-builder' ),
 				),
 				'_for_fields' => array(),
 			),
 
 			// The widget field
 			'class' => array(
-				'label' => __( 'Widget Class', 'so-widgets-bundle' ),
-				'description' => __( 'The class name for a sub widget.', 'so-widgets-bundle' ),
+				'label' => __( 'Widget Class', 'so-widgets-builder' ),
+				'description' => __( 'The class name for a sub widget.', 'so-widgets-builder' ),
 				'type' => 'text',
 				'default' => '',
 				'_for_fields' => array(),
@@ -246,7 +259,13 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 		if( $depth >= 1 ) {
 			$return['sub_fields'] = array(
 				'type' => 'repeater',
-				'label' => __( 'Fields', 'so-widgets-bundle' ),
+				'label' => __( 'Fields', 'so-widgets-builder' ),
+				'item_name'  => __( 'Field', 'so-widgets-builder' ),
+				'item_label' => array(
+					'selector'     => ".siteorigin-widget-input[id*='fields-label']",
+					'update_event' => 'change',
+					'value_method' => 'val'
+				),
 				'fields' => $this->get_field_array( --$depth ),
 				'_for_fields' => array(),
 			);
