@@ -9,8 +9,9 @@ class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
 
 	private $custom_options;
 
-	function __construct( $id, $name, $description, $custom_options ) {
+	function __construct( $id, $widget_class, $name, $description, $custom_options ) {
 		$this->custom_options = $custom_options;
+		$this->widget_class = $widget_class;
 
 		parent::__construct(
 			$id,

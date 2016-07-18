@@ -109,8 +109,20 @@ class SiteOrigin_Widgets_Builder {
 
 		foreach( $results as $result ) {
 			$custom_widget = get_post_meta( $result->ID, 'so_custom_widget', true );
-			$widget_obj = new SiteOrigin_Widget_Custom_Built_Widget( 'so-custom-' . $result->post_name, $result->post_title, $custom_widget[ 'description' ], $custom_widget );
-			$wp_widget_factory->widgets[ 'SiteOrigin_Widget_' . $result->post_name ] = $widget_obj;
+
+			// Generate a widget class for this widget
+			$widget_class = str_replace( '-', ' ', $result->post_name );
+			$widget_class = str_replace( ' ', '', ucwords( $widget_class ) );
+			$widget_class = 'SiteOrigin_Custom_Widget_' . $widget_class;
+
+			$widget_obj = new SiteOrigin_Widget_Custom_Built_Widget(
+				'so-custom-' . $result->post_name,
+				$widget_class,
+				$result->post_title,
+				$custom_widget[ 'description' ],
+				$custom_widget
+			);
+			$wp_widget_factory->widgets[ $widget_class ] = $widget_obj;
 		}
 	}
 
