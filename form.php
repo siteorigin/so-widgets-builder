@@ -200,14 +200,14 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 				'label' => __( 'Choose Label', 'so-widgets-builder' ),
 				'description' => __( 'A label for the title of the media selector dialog.', 'so-widgets-builder' ),
 				'type' => 'text',
-				'default' => '',
+				'default' => __( 'Choose Media', 'so-widgets-builder' ),
 				'_for_fields' => array(),
 			),
 			'update' => array(
 				'label' => __( 'Update Label', 'so-widgets-builder' ),
 				'description' => __( 'A label for the confirmation button of the media selector dialog.', 'so-widgets-builder' ),
 				'type' => 'text',
-				'default' => '',
+				'default' =>  __( 'Set Media', 'so-widgets-builder' ),
 				'_for_fields' => array(),
 			),
 			'library' => array(
