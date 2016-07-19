@@ -322,4 +322,53 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 	function widget( $args, $instance ) {
 
 	}
+
+	function update($new_instance, $old_instance) {
+		// Do all the necessary sanitization
+		$new_instance = parent::update($new_instance, $old_instance);
+
+		$fields = include plugin_dir_path( __FILE__ ) . '../data/fields.php';
+
+		$field_fields = array_merge(
+			$this->get_general_field_fields(),
+			$this->get_specific_fields()
+		);
+		foreach( $fields as $k => $field ) {
+			if( empty( $field[ 'fields' ] ) ) continue;
+			foreach( $field[ 'fields' ] as $f ) {
+				// Skip any fields that don't have _for_fields
+				if( ! isset( $field_fields[$f]['_for_fields'] ) ) continue;
+				$field_fields[$f]['_for_fields'][] = $k;
+			}
+		}
+
+		$new_instance['fields'] = $this->remove_excess_attributes( $new_instance['fields'], $field_fields );
+
+		return $new_instance;
+	}
+
+	/**
+	 * @param $fields
+	 * @param $field_fields
+	 * @return mixed
+	 */
+	private function remove_excess_attributes( $fields, $field_fields ){
+		foreach( $fields as & $field ) {
+			$type = ! empty( $field['type'] ) ? $field['type'] : false;
+			if( empty( $type ) ) continue;
+
+			foreach( $field as $k => $v ) {
+				if( empty( $field_fields[$k] ) || empty( $field_fields[$k]['_for_fields'] ) ) continue;
+				if( ! in_array( $type, $field_fields[$k]['_for_fields'] ) ) {
+					unset( $field[$k] );
+				}
+			}
+
+			if( !empty( $field['sub_fields'] ) ) {
+				$field['sub_fields'] = $this->remove_excess_attributes( $field['sub_fields'], $field_fields );
+			}
+		}
+
+		return $fields;
+	}
 }
