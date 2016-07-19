@@ -240,7 +240,7 @@ class SiteOrigin_Widgets_Builder_Form extends SiteOrigin_Widget {
 
 		static $fields;
 		if( empty( $fields ) ) {
-			$fields = include plugin_dir_path( __FILE__ ) . '/data/fields.php';
+			$fields = include plugin_dir_path( __FILE__ ) . '../data/fields.php';
 		}
 
 		$return = array_merge(
