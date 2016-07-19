@@ -120,10 +120,8 @@ class SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 	}
 
 	function get_html_content( $instance, $args, $template_vars, $css_name ){
-		$tpl = $this->custom_options[ 'template_code' ];
-
 		// Process the code using Dust
-		$twig = $this->get_twig( $tpl );
+		$twig = $this->get_twig( );
 		$tpl = $twig->render( 'default', $instance );
 
 		// Add the title field if there is one
@@ -186,41 +184,20 @@ class SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 		return $this->custom_options[ 'less_code' ];
 	}
 
-	function get_twig( $tpl ){
+	function get_twig( ){
 		$loader = new Twig_Loader_Array( array(
-			'default' => $tpl,
+			'default' => $this->custom_options[ 'template_code' ],
 		) );
 		$twig = new Twig_Environment( $loader, array(
 			'autoescape' => true,
 		) );
 
-		$twig->addFilter( new Twig_SimpleFilter('panels_render', function ( $panels_data ) {
-			return function_exists( 'siteorigin_panels_render' ) ?
-				siteorigin_panels_render( 'w'.substr( md5( json_encode( $panels_data ) ), 0, 8 ), true, $panels_data ) :
-				__( 'Page builder is required to render this field.', 'so-widgets-builder' );
-		} ) );
+		if( ! class_exists( 'SiteOrigin_Widget_Twig_Filters' ) ) {
+			include plugin_dir_path( __FILE__ ) . 'twig-filters.class.php';
+		}
 
-		$twig->addFilter( new Twig_SimpleFilter('image', function ( $id, $type = 'html', $size = 'full' ) {
-			switch( $type ) {
-				case 'html' :
-					return wp_get_attachment_image( $id, $size );
-					break;
-
-				default :
-					$src = wp_get_attachment_image_src( $id, $size );
-					if( empty( $src ) ) return '';
-					if( $type == 'src' ) {
-						return $src[0];
-					}
-					else if( $type == 'width' ) {
-						return $src[1];
-					}
-					else if( $type == 'height' ) {
-						return $src[2];
-					}
-					break;
-			}
-		} ) );
+		$twig->addFilter( new Twig_SimpleFilter('panels_render', array( 'SiteOrigin_Widget_Twig_Filters', 'panels_render' ) ) );
+		$twig->addFilter( new Twig_SimpleFilter('image', array( 'SiteOrigin_Widget_Twig_Filters', 'image' ) ) );
 
 		return $twig;
 	}
