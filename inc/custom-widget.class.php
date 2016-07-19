@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Class SiteOrigin_Widget_CustomBuilt_Widget
+ * Class SiteOrigin_Widget_Custom_Widget
  */
-class SiteOrigin_Widget_CustomBuilt_Widget extends SiteOrigin_Widget {
+class SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 
-	private $custom_options;
+	protected $custom_options;
 
 	function __construct( $id, $widget_class, $name, $description, $custom_options ) {
 		$this->custom_options = $custom_options;
@@ -124,7 +124,7 @@ class SiteOrigin_Widget_CustomBuilt_Widget extends SiteOrigin_Widget {
 
 		// Process the code using Dust
 		$twig = $this->get_twig( $tpl );
-		$tpl = $twig->render( 'default.tpl', $instance );
+		$tpl = $twig->render( 'default', $instance );
 
 		// Add the title field if there is one
 		if( $this->custom_options[ 'has_title' ] && !empty( $instance['title'] ) ) {
@@ -188,7 +188,7 @@ class SiteOrigin_Widget_CustomBuilt_Widget extends SiteOrigin_Widget {
 
 	function get_twig( $tpl ){
 		$loader = new Twig_Loader_Array( array(
-			'default.tpl' => $tpl,
+			'default' => $tpl,
 		) );
 		$twig = new Twig_Environment( $loader, array(
 			'autoescape' => true,

@@ -37,13 +37,15 @@ class SiteOrigin_Widgets_Builder {
 			add_action( 'admin_menu', array( $this, 'setup_diagnosis_page' ), 5 );
 		}
 		else {
-			include plugin_dir_path( __FILE__ ) . '/form.php';
-			include plugin_dir_path( __FILE__ ) . '/widget.php';
+			include plugin_dir_path( __FILE__ ) . 'inc/builder-form.class.php';
+			include plugin_dir_path( __FILE__ ) . 'inc/custom-widget.class.php';
 
 			add_action( 'init', array( $this, 'register_post_type' ) );
 			add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 			add_action( 'save_post', array( $this, 'save_post' ) );
 			add_action( 'widgets_init', array( $this, 'register_widgets' ) );
+
+			add_action( 'wp_ajax_so_export_widgets', array( $this, 'export_widgets' ) );
 
 			require_once plugin_dir_path( __FILE__ ) . 'inc/Twig/Autoloader.php';
 			Twig_Autoloader::register();
@@ -117,7 +119,7 @@ class SiteOrigin_Widgets_Builder {
 			$widget_class = str_replace( ' ', '', ucwords( $widget_class ) );
 			$widget_class = 'SiteOrigin_Custom_Widget_' . $widget_class;
 
-			$widget_obj = new SiteOrigin_Widget_CustomBuilt_Widget(
+			$widget_obj = new SiteOrigin_Widget_Custom_Widget(
 				'so-custom-' . $result->post_name,
 				$widget_class,
 				$result->post_title,
@@ -173,6 +175,42 @@ class SiteOrigin_Widgets_Builder {
 
 	function display_diagnosis_page(){
 		include plugin_dir_path( __FILE__ ) . '/tpl/diagnosis.php';
+	}
+
+	function export_widgets(){
+		global $wpdb;
+		$results = $wpdb->get_results( "
+			SELECT ID, post_title, post_name
+			FROM $wpdb->posts
+			WHERE post_type = 'so-custom-widget' AND post_status = 'publish'
+		" );
+
+		include plugin_dir_path( __FILE__ ) . 'inc/exporter-widget.class.php';
+
+		foreach( $results as $result ) {
+			$custom_widget = get_post_meta( $result->ID, 'so_custom_widget', true );
+
+			// Generate a widget class for this widget
+			$widget_class = str_replace( '-', ' ', $result->post_name );
+			$widget_class = str_replace( ' ', '', ucwords( $widget_class ) );
+			$widget_class = 'SiteOrigin_Custom_Widget_' . $widget_class;
+
+			$widget_obj = new SiteOrigin_Widget_Exporter_Widget(
+				'so-custom-' . $result->post_name,
+				$widget_class,
+				$result->post_title,
+				$custom_widget[ 'description' ],
+				$custom_widget
+			);
+
+			$code = $widget_obj->get_php_code();
+
+			echo '<pre>';
+			echo htmlspecialchars( $code );
+			echo '</pre>';
+		}
+
+		exit();
 	}
 }
 SiteOrigin_Widgets_Builder::single();
