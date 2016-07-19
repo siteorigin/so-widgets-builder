@@ -117,7 +117,7 @@ class SiteOrigin_Widgets_Builder {
 			$widget_class = str_replace( ' ', '', ucwords( $widget_class ) );
 			$widget_class = 'SiteOrigin_Custom_Widget_' . $widget_class;
 
-			$widget_obj = new SiteOrigin_Widget_Custom_Built_Widget(
+			$widget_obj = new SiteOrigin_Widget_CustomBuilt_Widget(
 				'so-custom-' . $result->post_name,
 				$widget_class,
 				$result->post_title,

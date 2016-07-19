@@ -1,11 +1,9 @@
 <?php
 
 /**
- * A widget that
- *
- * Class SiteOrigin_Widget_Custom_Built_Widget
+ * Class SiteOrigin_Widget_CustomBuilt_Widget
  */
-class SiteOrigin_Widget_Custom_Built_Widget extends SiteOrigin_Widget {
+class SiteOrigin_Widget_CustomBuilt_Widget extends SiteOrigin_Widget {
 
 	private $custom_options;
 
