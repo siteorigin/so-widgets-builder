@@ -1,13 +1,17 @@
 <?php
+/*
+Widget Name: {{WIDGET_NAME_RAW}}
+Description: {{WIDGET_DESCRIPTION_RAW}}
+*/
 
 class _SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 	function __construct(){
 		parent::__construct(
-			'sow-cta',
-			__('SiteOrigin CUSTOM WIDGET', 'so-widgets-bundle'),
+			'{{WIDGET_ID}}',
+			'{{WIDGET_NAME}}',
 			array(
-				'description' => __('A simple call-to-action widget with massive power.', 'so-widgets-bundle'),
-				// 'help' => 'https://siteorigin.com/widgets-bundle/call-action-widget/'
+				'description' => '{{WIDGET_DESCRIPTION}}',
+				'help' => '{{WIDGET_HELP}}'
 			),
 			array(
 
@@ -18,7 +22,7 @@ class _SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 	}
 
 	function initialize(){
-
+		/* {{INITIALIZE}} */
 	}
 
 	function initialize_form(){
@@ -26,6 +30,8 @@ class _SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 	}
 
 	function get_html_content( $instance, $args, $template_vars, $css_name ){
+		$twig = $this->get_twig();
+
 		/* {{RETURN_HTML}} */
 	}
 
@@ -42,6 +48,17 @@ class _SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 			'autoescape' => true,
 		) );
 
+		if( ! class_exists( 'SiteOrigin_Widget_Twig_Filters' ) ) {
+			include plugin_dir_path( __FILE__ ) . '../../inc/twig-filters.class.php';
+		}
+
+		$twig->addFilter( new Twig_SimpleFilter('panels_render', array( 'SiteOrigin_Widget_Twig_Filters', 'panels_render' ) ) );
+		$twig->addFilter( new Twig_SimpleFilter('image', array( 'SiteOrigin_Widget_Twig_Filters', 'image' ) ) );
+
 		return $twig;
 	}
 }
+
+siteorigin_widget_register( '{{WIDGET_ID}}', __FILE__, '_SiteOrigin_Widget_Custom_Widget' );
+
+/* {{TWIG_TEMPLATE}} */

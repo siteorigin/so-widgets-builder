@@ -47,8 +47,11 @@ class SiteOrigin_Widgets_Builder {
 
 			add_action( 'wp_ajax_so_export_widgets', array( $this, 'export_widgets' ) );
 
-			require_once plugin_dir_path( __FILE__ ) . 'inc/Twig/Autoloader.php';
-			Twig_Autoloader::register();
+			if( ! class_exists( 'Twig_Autoloader' ) ) {
+				// Setup the autoloader for Twig
+				require_once plugin_dir_path( __FILE__ ) . 'inc/Twig/Autoloader.php';
+				Twig_Autoloader::register();
+			}
 		}
 	}
 
@@ -203,7 +206,11 @@ class SiteOrigin_Widgets_Builder {
 				$custom_widget
 			);
 
-			$code = $widget_obj->get_php_code();
+			$code = $widget_obj->get_php_code( array(
+				'widget_id' => $result->post_name,
+				'widget_name' => $result->post_title,
+				'widget_description' => $custom_widget['description'],
+			) );
 
 			echo '<pre>';
 			echo htmlspecialchars( $code );
