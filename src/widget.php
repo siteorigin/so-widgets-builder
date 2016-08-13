@@ -48,12 +48,11 @@ class _SiteOrigin_Widget_Custom_Widget extends SiteOrigin_Widget {
 			'autoescape' => true,
 		) );
 
-		if( ! class_exists( 'SiteOrigin_Widget_Twig_Filters' ) ) {
-			include plugin_dir_path( __FILE__ ) . '../../inc/twig-filters.class.php';
+		if( ! class_exists( 'SiteOrigin_Widget_Twig_Extension' ) ) {
+			include plugin_dir_path( __FILE__ ) . '../../inc/twig-extension.class.php';
 		}
 
-		$twig->addFilter( new Twig_SimpleFilter('panels_render', array( 'SiteOrigin_Widget_Twig_Filters', 'panels_render' ) ) );
-		$twig->addFilter( new Twig_SimpleFilter('image', array( 'SiteOrigin_Widget_Twig_Filters', 'image' ) ) );
+		$twig->addExtension( new SiteOrigin_Widget_Twig_Extension() );
 
 		return $twig;
 	}
